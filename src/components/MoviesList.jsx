@@ -62,14 +62,21 @@ export default function MoviesList({ movies, setMovies, category, genre }) {
   };
 
   // Show full movie details
-  const handleMovieClick = (id) => {
-    fetch(`/api/movies?i=${encodeURIComponent(id)}`)
-      .then(res => res.json())
-      .then(data => {
-        setSelectedMovie(data);
-      })
-      .catch(err => console.error("Movie details error:", err));
+  // Show full movie details - using backend API
+  const handleMovieClick = async (id) => {
+    try {
+      const res = await fetch(`/api/movies?i=${encodeURIComponent(id)}`);
+      if (!res.ok) {
+        throw new Error(`Request failed with status ${res.status}`);
+      }
+
+      const data = await res.json();
+      setSelectedMovie(data);
+    } catch (err) {
+      console.error("Movie details error:", err);
+    }
   };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-indigo-950/30 to-purple-950/20 relative overflow-hidden">
